@@ -26,6 +26,7 @@
     "gulp-nodemon": "^2.0.2",
     "mocha": "^2.5.3",
     "sequelize-cli": "^2.4.0",
+    "supertest": "^1.2.0",
     "supertest-as-promised": "^3.1.0"
   }
 }
