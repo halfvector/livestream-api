@@ -21,10 +21,12 @@ mysql -uroot -e "create database livestream_api_testing"
 ```
 
 ### Run API server
-`npm start` - Run the API server (defaults to port 9000)
-`gulp` - Run and auto-restart server when changes are detected
+`npm start` - Run the API server (defaults to port 9000)  
+`gulp` - Run and auto-restart server when changes are detected  
 
-### Run tests
+### Run automated tests
 `npm test` - Run tests once  
 `mocha -w` - Rerun tests whenever changes are detected  
 
+### Manual testing using Postman
+Download Postman collection: https://www.getpostman.com/collections/fbb913712bde3a2878e7
