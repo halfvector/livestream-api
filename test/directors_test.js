@@ -22,7 +22,6 @@ describe('Resource /directors', function () {
         return db.sequelize.sync()
             .then(function () {
                 return Promise.all([
-                    db.FavoriteMovies.destroy({where: {}}),
                     db.Movie.destroy({where: {}}),
                     db.Director.destroy({where: {}})
                 ]);
@@ -45,6 +44,15 @@ describe('Resource /directors', function () {
             .expect(400);
     });
 
+    it('POST should return 400 if livestream_id is not an integer', function () {
+        return client
+            .post('/directors')
+            .send({
+                livestream_id: "not an int"
+            })
+            .expect(400);
+    });
+
     it('POST should return 404 when livestream_id not found by remote Livestream Accounts API', function () {
         return client
             .post('/directors')
@@ -63,12 +71,27 @@ describe('Resource /directors', function () {
             .expect(200);
     });
 
-    it('GET should return 400 if livestream_id is not an integer', function () {
+    it('POST should create favorite movies on demand', function () {
         return client
             .post('/directors')
             .send({
-                livestream_id: "not an int"
+                livestream_id: 6488834,
+                movies: [
+                    {movie_name: "Jingle All the Way"},
+                    {movie_name: "Twins"},
+                    {movie_name: "Junior"},
+                ]
             })
+            .expect(200)
+            .then(function () {
+                return client.get('/directors/6488834')
+                .expect(200);
+            })
+    });
+
+    it('GET should return 400 if livestream_id is not an integer', function () {
+        return client
+            .get('/directors/asdf')
             .expect(400);
     });
 

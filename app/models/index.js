@@ -9,10 +9,10 @@ var sequelize = new Sequelize(config.db);
 var DataTypes = Sequelize;
 
 var Movie = sequelize.define('Movie', {
-    movie_name: DataTypes.STRING
-});
-
-var FavoriteMovies = sequelize.define('FavoriteMovies', {
+    movie_name: {
+        type: DataTypes.STRING,
+        unique: true
+    }
 });
 
 var Director = sequelize.define('Director', {
@@ -21,8 +21,7 @@ var Director = sequelize.define('Director', {
         primaryKey: true
     },
     full_name: DataTypes.STRING,
-    favorite_camera: DataTypes.STRING,
-    favorite_movies: DataTypes.STRING
+    favorite_camera: DataTypes.STRING
 });
 
 /*
@@ -30,14 +29,13 @@ var Director = sequelize.define('Director', {
  * where a Director may have multiple Favorite Movies
  * and a Movie may be favorited by multiple Directors
  */
-Movie.belongsToMany(Director, {through: FavoriteMovies});
-Director.belongsToMany(Movie, {through: FavoriteMovies});
+Movie.belongsToMany(Director, {through: 'FavoriteMovies', as: 'favorite_movies'});
+Director.belongsToMany(Movie, {through: 'FavoriteMovies', as: 'favorite_movies'});
 
 module.exports = {
     // Models
     Director: Director,
     Movie: Movie,
-    FavoriteMovies: FavoriteMovies,
 
     // DB Connection
     sequelize: sequelize

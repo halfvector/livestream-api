@@ -25,8 +25,6 @@ router.route('/')
     .post(function (req, res) {
         // Validate parameters
         req.checkBody('livestream_id', 'livestream_id field is required and must be an int').isInt();
-        //req.checkBody('favorite_camera', 'Favorite Camera is an optional string').optional().isString();
-        //req.checkBody('favorite_movies', 'Favorite Movies is an optional array').isArray();
 
         var validationErrors = req.validationErrors();
         if (validationErrors) {
@@ -40,10 +38,11 @@ router.route('/')
                 var model = {
                     livestream_id: req.body.livestream_id,
                     full_name: data.full_name,
-                    favorite_camera: req.body.favorite_camera
+                    favorite_camera: req.body.favorite_camera,
+                    favorite_movies: req.body.favorite_movies
                 };
 
-                return db.Director.create(model)
+                return db.Director.create(model, {include: [{model: db.Movie, as: "favorite_movies"}]})
                     .then(function (result) {
                         res.status(200).json(result.dataValues);
                     })
@@ -79,7 +78,7 @@ router.route('/:livestream_id')
             return;
         }
 
-        return db.Director.findById(req.params.livestream_id)
+        return db.Director.findById(req.params.livestream_id, {include: [{model: db.Movie, as: "favorite_movies"}]})
             .then(function (director) {
                 if (director) {
                     res.status(200).json(director);
@@ -98,10 +97,11 @@ router.route('/:livestream_id')
             res.status(400).json(validationErrors);
             return;
         }
-
         return db.Director.update({
                 favorite_camera: req.body.favorite_camera
-            }, {where: {livestream_id: req.params.livestream_id}})
+            }, {
+                where: {livestream_id: req.params.livestream_id},
+            })
             .spread(function (result) {
                 if (result) {
                     res.status(200).json(result);
