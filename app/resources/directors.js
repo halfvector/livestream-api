@@ -16,8 +16,8 @@ var livestreamClient = require('../livestream_client');
 router.route('/')
     // List all Directors
     .get(function (req, res) {
-        db.Director.findAll().then(function (articles) {
-            res.json(articles);
+        db.Director.findAll().then(function (directors) {
+            res.json(directors);
         });
     })
 
@@ -42,23 +42,23 @@ router.route('/')
                     favorite_movies: req.body.favorite_movies
                 };
 
+                // Persist Director in DB
                 return db.Director.create(model, {include: [{model: db.Movie, as: "favorite_movies"}]})
                     .then(function (result) {
                         res.status(200).json(result.dataValues);
                     })
                     .catch(function (err) {
                         if (err.name === 'SequelizeUniqueConstraintError') {
-                            // Directory already exists
+                            // Director already exists
                             res.status(409).json({'error': 'Account already exists'});
                         } else {
                             // Unexpected error
-                            console.log('Failed to save new director', err);
                             res.status(500).json(err);
                         }
                     });
             })
             .catch(function (err) {
-                // Use remote api service error message if one is available
+                // Use remote api service error status and message if available
                 if (err.statusCode && err.error) {
                     res.status(err.statusCode).json({error: err.error.message});
                 } else {
