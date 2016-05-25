@@ -10,13 +10,22 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
+var expressValidator = require('express-validator');
 var _ = require('lodash');
 
 module.exports = function (app, config) {
-    app.use(bodyParser.urlencoded({extended: false}));
+    var customValidators = {
+        isArray: function (value) {
+            return Array.isArray(value);
+        }
+    }
+
     app.use(bodyParser.json());
+    app.use(expressValidator({'customValidators': customValidators}));
     app.use(methodOverride());
     app.use(cookieParser());
-    app.use(logger('dev'));
+    if(!config.underTest) {
+        app.use(logger('dev'));
+    }
     app.use(errorHandler()); // Error handler - has to be last
 };

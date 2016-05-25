@@ -1,6 +1,5 @@
 /**
  * API Configuration
- *
  */
 'use strict';
 
@@ -10,23 +9,52 @@ var _ = require('lodash');
 var configs = {
     // Local development environment
     localhost: {
-        secrets: {
-            some_api_key: 'key'
+        http: {
+            port: 9000,
         },
-        port: 9000,
-        db: 'mysql://localhost/livestream-api-development'
+        db: {
+            host: 'localhost',
+            database: 'livestream_api_localhost',
+            username: 'root',
+            password: ''
+        }
     },
 
-    // Staging Environment
+    // Local automated test environment (tdd, build-server)
+    testing: {
+        underTest: true,
+        http: {
+            port: 9000,
+        },
+        db: {
+            host: 'localhost',
+            database: 'livestream_api_testing',
+            username: 'root',
+            password: '',
+            logging: false
+        }
+    },
+
+    // Staging Environment (unused)
     staging: {
-        port: 9000,
-        db: 'mysql://staging.server/livestream-api-staging'
+        http: {
+            port: 9000,
+        },
+        db: {
+            host: 'staging.server',
+            database: 'livestream_api_staging'
+        }
     },
 
-    // Production environment
+    // Production environment (unused)
     production: {
-        port: 9000,
-        db: 'mysql://production.server/livestream-api-production'
+        http: {
+            port: 9000,
+        },
+        db: {
+            host: 'production.server',
+            database: 'livestream_api_production'
+        }
     }
 };
 

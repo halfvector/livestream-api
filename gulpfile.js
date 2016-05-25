@@ -3,10 +3,8 @@ var nodemon = require('gulp-nodemon');
 
 gulp.task('serve', [], function () {
     var options = {
-        //exec: 'node .',
-        script: 'api.js',
-        ext: 'js',
-        //watch: ['app.js']
+        script: 'start.js',
+        ext: 'js'
     };
 
     return nodemon(options).on('restart', [], function (env) {
